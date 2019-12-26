@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId 'com.github.nkzawa.socketio.androidchat'
         minSdkVersion 17
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
     }
@@ -37,6 +37,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
 
     implementation 'de.hdodenhof:circleimageview:3.0.1'
+
+    implementation 'br.com.simplepass:loading-button-android:2.2.0'
 
     implementation('io.socket:socket.io-client:0.8.3') {
         exclude group: 'org.json', module: 'json'

@@ -1,4 +1,4 @@
-package com.github.nkzawa.socketio.androidchat;
+package com.github.nkzawa.socketio.androidchat.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.github.nkzawa.socketio.androidchat.R;
+import com.github.nkzawa.socketio.androidchat.util.ChatApplication;
+
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import org.json.JSONException;
@@ -27,6 +32,8 @@ public class LoginActivity extends Activity {
     private String mUsername;
 
     private Socket mSocket;
+    private CircularProgressButton btn;
+    private boolean isAnimated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,22 +44,18 @@ public class LoginActivity extends Activity {
         mSocket = app.getSocket();
 
         // Set up the login form.
-        mUsernameView = (EditText) findViewById(R.id.username_input);
-        mUsernameView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+        mUsernameView = findViewById(R.id.username_input);
+        mUsernameView.setOnEditorActionListener((textView, id, keyEvent) -> {
+            if (id == EditorInfo.IME_NULL) {
+                attemptLogin();
+                return true;
             }
+            return false;
         });
 
-        Button signInButton = (Button) findViewById(R.id.sign_in_button);
-        signInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btn = findViewById(R.id.btn_id);
+        btn.setOnClickListener(view -> {
+            if (isAnimated == false) {
                 attemptLogin();
             }
         });
@@ -63,7 +66,6 @@ public class LoginActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         mSocket.off("login", onLogin);
     }
 
@@ -89,6 +91,9 @@ public class LoginActivity extends Activity {
         }
 
         mUsername = username;
+
+        btn.startAnimation();
+        isAnimated = true;
 
         // perform the user login attempt.
         mSocket.emit("add user", username);
